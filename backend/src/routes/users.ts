@@ -47,7 +47,7 @@ router.post(
         maxAge: 86400000, //in milliseconds => same value as the jwt expiry
       });
 
-      res.sendStatus(200);
+      res.status(200).send({ message: "user registered OK." });
     } catch (error) {
       res.status(500).send({ message: "something went wrong." });
     }
