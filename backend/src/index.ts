@@ -4,6 +4,7 @@ import "dotenv/config";
 import mongoose from "mongoose";
 import userRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
+import cookieParser from "cookie-parser";
 const PORT = 8000;
 
 mongoose
@@ -11,10 +12,15 @@ mongoose
   .then(() => console.log("MongoDB connection established successfully!"));
 
 const app = express();
-
+app.use(cookieParser());
 app.use(express.json()); //help convert every req body into json
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL as string,
+    credentials: true,
+  })
+);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
