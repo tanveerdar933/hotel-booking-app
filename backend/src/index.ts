@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import mongoose from "mongoose";
@@ -6,7 +6,9 @@ import userRoutes from "./routes/users";
 import authRoutes from "./routes/auth";
 import cookieParser from "cookie-parser";
 import path from "path";
+import serverless from "serverless-http";
 const PORT = 8000;
+const isOnNetlify = true;
 
 mongoose
   .connect(process.env.MONGO_DB_URI as string)
@@ -28,6 +30,10 @@ app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
-app.listen(PORT, () => {
-  console.log("Server is running on localhost:", PORT);
-});
+if (!isOnNetlify) {
+  app.listen(PORT, () => {
+    console.log("Server is running on localhost:", PORT);
+  });
+}
+
+export const handler = serverless(app);
